@@ -2,37 +2,32 @@ package com.strangea.producers
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.strangea.producers.api.ApiManager
-import com.strangea.producers.entities.Producer
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
-import retrofit2.Response
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.strangea.producers.datasource.ProducerDataSource
+import com.strangea.producers.entities.ProducerResponse
+import java.util.concurrent.Executors
+
 
 class ProducerViewModel(application: Application) : AndroidViewModel(application){
-    val producerLiveData = MutableLiveData<Response<Producer>>()
 
-    fun loadProducers(){
-        ApiManager.getApiManager().service.getProducers()
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .subscribe(object : SingleObserver<Response<Producer>> {
-                override fun onSubscribe(d: Disposable) {}
+    private val dataSourceFactory = ProducerDataSourceFactory()
+    val dataSource = dataSourceFactory.create()
+    val list: LiveData<PagedList<ProducerResponse>> =
+        LivePagedListBuilder(dataSourceFactory, 20)
+            .setFetchExecutor(Executors.newSingleThreadExecutor())
+            .build()
 
-                override fun onSuccess(response: Response<Producer>) {
-                    producerLiveData.postValue(response)
-                }
-
-                override fun onError(e: Throwable) {
-                    if (e is HttpException) {
-                        e.response().errorBody()?.let {
-                            producerLiveData.postValue(Response.error(e.code(), it))
-                        }
-                    }
-                }
-            })
-
+    class ProducerDataSourceFactory :
+        DataSource.Factory<Int, ProducerResponse>() {
+        private val sourceLiveData = MutableLiveData<ProducerDataSource>()
+        override fun create(): DataSource<Int, ProducerResponse> {
+            val source = ProducerDataSource()
+            sourceLiveData.postValue(source)
+            return source
+        }
     }
 }

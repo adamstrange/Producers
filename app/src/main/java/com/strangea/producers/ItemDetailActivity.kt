@@ -22,14 +22,9 @@ class ItemDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_item_detail)
         setSupportActionBar(detailToolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val producerResponse = intent.getParcelableExtra<ProducerResponse>(ARG_ITEM);
+        val producerResponse = intent.getParcelableExtra<ProducerResponse>(ARG_ITEM)
         producerResponse.images?.let{
             Picasso.get().load(it[0].path).into(producerImageView)
         }

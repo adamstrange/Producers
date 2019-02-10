@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 
 class ProducerAdapter (
     diffCallback: DiffUtil.ItemCallback<ProducerResponse>
-    ) : ListAdapter<ProducerResponse, ProducerAdapter.ViewHolder>(diffCallback) {
+    ) : PagedListAdapter<ProducerResponse, ProducerAdapter.ViewHolder>(diffCallback) {
 
     private val onClickListener: View.OnClickListener
 
@@ -33,13 +34,14 @@ class ProducerAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.idView.text = item.name
-        holder.contentView.text = if(item.shortDescription.isNullOrEmpty()) {item.description} else {item.shortDescription}
+        getItem(position)?.let {
+            holder.idView.text = it.name
+            holder.contentView.text = if(it.shortDescription.isNullOrEmpty()) {it.description} else {it.shortDescription}
 
-        with(holder.itemView) {
-            tag = item
-            setOnClickListener(onClickListener)
+            with(holder.itemView) {
+                tag = it
+                setOnClickListener(onClickListener)
+            }
         }
     }
 
