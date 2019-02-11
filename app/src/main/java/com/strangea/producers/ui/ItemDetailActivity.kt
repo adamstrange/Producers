@@ -1,12 +1,12 @@
-package com.strangea.producers
+package com.strangea.producers.ui
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
-import com.strangea.producers.entities.ProducerResponse
+import com.strangea.producers.R
+import com.strangea.producers.database.Producer
 import kotlinx.android.synthetic.main.activity_item_detail.*
 
 /**
@@ -24,9 +24,9 @@ class ItemDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val producerResponse = intent.getParcelableExtra<ProducerResponse>(ARG_ITEM)
-        producerResponse.images?.let{
-            Picasso.get().load(it[0].path).into(producerImageView)
+        val producerResponse = intent.getParcelableExtra<Producer>(ARG_ITEM)
+        producerResponse.image?.let{
+            Picasso.get().load(it).into(producerImageView)
         }
         if(!producerResponse.location.isNullOrEmpty()) {
             itemDetailTextView.text = producerResponse.location

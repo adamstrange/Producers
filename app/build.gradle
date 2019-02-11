@@ -9,7 +9,7 @@ apply plugin: "kotlin-kapt"
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.strangea.producers"
+        applicationId "com.strangea.producerResponseItems"
         minSdkVersion 27
         targetSdkVersion 28
         versionCode 1
@@ -31,8 +31,15 @@ android {
 dependencies {
     def lifecycle_version = "2.0.0"
     def paging_version = "2.1.0"
+    def room_version = "2.1.0-alpha04"
 
-    implementation "androidx.paging:paging-runtime:$paging_version" // For Kotlin use paging-runtime-ktx
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     implementation 'com.google.code.gson:gson:2.8.5'
 

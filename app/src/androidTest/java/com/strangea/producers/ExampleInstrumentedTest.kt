@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.strangea.producers", appContext.packageName)
+        assertEquals("com.strangea.producerResponseItems", appContext.packageName)
     }
 }
