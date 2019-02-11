@@ -14,4 +14,7 @@ interface ProducerDao {
 
     @Query("SELECT * FROM producer_table ORDER BY currentPage ASC")
     fun producersByPage(): DataSource.Factory<Int, Producer>
+
+    @Query("SELECT * FROM producer_table WHERE name LIKE '%' || :query || '%'")
+    fun search(query: String): DataSource.Factory<Int, Producer>
 }

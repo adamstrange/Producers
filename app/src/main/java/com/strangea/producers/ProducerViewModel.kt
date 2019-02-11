@@ -20,18 +20,29 @@ import java.util.concurrent.Executors
 
 class ProducerViewModel(application: Application) : AndroidViewModel(application){
 
-    var list: LiveData<PagedList<Producer>>
+    var pagedList: LiveData<PagedList<Producer>>
+    var searchList: LiveData<PagedList<Producer>>? = null
+    private var dao: ProducerDao = ProducerRoomDatabase.getDatabase(getApplication())!!.producerDao()
 
     init {
-        val dao = ProducerRoomDatabase.getDatabase(getApplication())!!.producerDao()
         val dataSource : DataSource.Factory<Int, Producer> = dao.producersByPage()
 
-        list = LivePagedListBuilder(dataSource, 20)
+        pagedList = LivePagedListBuilder(dataSource, 20)
                 .setBoundaryCallback(ProducerBoundaryCallback(
                     ApiManager.getApiManager().service,
                     dao))
                 .setFetchExecutor(Executors.newSingleThreadExecutor())
                 .build()
+    }
+
+    fun search(query: String){
+        val dataSource2 : DataSource.Factory<Int, Producer> = dao.search(query)
+        searchList = LivePagedListBuilder(dataSource2, 20)
+            .setBoundaryCallback(ProducerBoundaryCallback(
+                ApiManager.getApiManager().service,
+                dao))
+            .setFetchExecutor(Executors.newSingleThreadExecutor())
+            .build()
     }
 
     class ProducerBoundaryCallback(

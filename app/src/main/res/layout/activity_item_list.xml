@@ -21,13 +21,26 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <LinearLayout
             android:id="@+id/frameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <include layout="@layout/item_list"/>
-    </FrameLayout>
+        <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/recyclerView"
+               android:name="com.strangea.producers.ItemListFragment"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_marginLeft="16dp"
+               android:layout_marginRight="16dp"
+               app:layoutManager="LinearLayoutManager"
+               tools:context=".ui.ItemListActivity"
+               tools:listitem="@layout/item_list_content"/>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
